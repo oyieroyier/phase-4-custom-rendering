@@ -1,15 +1,19 @@
 class CheesesController < ApplicationController
-
   # GET /cheeses
   def index
     cheeses = Cheese.all
-    render json: cheeses
+    render json: cheeses,
+           except: %i[created_at updated_at],
+           methods: %i[summary]
   end
 
   # GET /cheeses/:id
   def show
     cheese = Cheese.find_by(id: params[:id])
-    render json: cheese
+    if cheese
+      render json: cheese
+    else
+      render json: { error: 'It seems a mouse already ate that cheese!' }, status: 404
+    end
   end
-
 end
